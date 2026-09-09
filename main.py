@@ -1,9 +1,16 @@
 import os
+from typing import Iterable
 from dotenv import load_dotenv
 from openai import OpenAI
+import argparse
 
 
 model_name = "openrouter/free"
+
+def parse_args(args:Iterable[str]|None=None):
+  parser = argparse.ArgumentParser(description="Openrouter AI chatbot")
+  parser.add_argument("user_prompt", type=str, help="User's prompt")
+  return parser.parse_args(args)
 
 def main():
   load_dotenv()
@@ -16,7 +23,8 @@ def main():
       api_key=api_key
       )
 
-  prompt = "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
+  args = parse_args()
+  prompt = args.user_prompt
   response = client.chat.completions.create(
       model=model_name,
       messages=[
